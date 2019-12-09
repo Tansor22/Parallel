@@ -1,8 +1,8 @@
 # Parallel
 The repository is dedicated to IPC subject, study for Master Degree first term.
 
-In most of the packages the following scheme is implemented:
-
+In most of the packages the following scheme is implemented <br>
+![System Scheme](Swim Lane Diagramms V2.png)
 
 1. **threads_impl** package - implementation with JDK threds.
 2. **rmi_impl** package - implementation with java RMI to achive inter-proccess communication. <br>
