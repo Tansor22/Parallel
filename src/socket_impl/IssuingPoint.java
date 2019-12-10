@@ -16,9 +16,9 @@ public class IssuingPoint {
     private static Socket cashierSocket;
 
 
-    private static Port port = Port.ISSUING_POINT;
-    private static Port customerPort = Port.CUSTOMER;
-    private static Port cashierPort = Port.CASHIER;
+    private static Host port = Host.ISSUING_POINT;
+    private static Host customerPort = Host.CUSTOMER;
+    private static Host cashierPort = Host.CASHIER;
 
     public static void main(String[] args) throws IOException {
         itsSocket = new ServerSocket(port.port);

@@ -48,7 +48,7 @@ public class Utils {
         return data.equalsIgnoreCase("exit");
     }
 
-    public static Socket getSocket(Port port) {
+    public static Socket getSocket(Host port) {
         Socket output = null;
         while (output == null) {
             try {
@@ -59,7 +59,7 @@ public class Utils {
                 } catch (InterruptedException e1) {
                     e1.printStackTrace();
                 }
-                System.out.println(Thread.currentThread().getName() + " wants for " + port.name());
+                System.out.println(Thread.currentThread().getName() + " waits for " + port.name());
                 //e.printStackTrace();
             }
         }

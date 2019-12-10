@@ -10,7 +10,7 @@ public class Shelf {
     private static ServerSocket itsSocket;
     private static Socket assistantSocket;
 
-    private static Port port = Port.SHELF;
+    private static Host port = Host.SHELF;
 
     public static void main(String[] args) throws IOException {
         itsSocket = new ServerSocket(port.port);

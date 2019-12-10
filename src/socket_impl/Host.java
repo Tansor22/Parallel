@@ -1,6 +1,6 @@
 package socket_impl;
 
-public enum Port {
+public enum Host {
     CUSTOMER(9876),
     CASHIER(9875),
     ASSISTANT(9874),
@@ -8,7 +8,7 @@ public enum Port {
     ISSUING_POINT(9872);
     int port;
 
-    Port(int port) {
+    Host(int port) {
         this.port = port;
     }
 }

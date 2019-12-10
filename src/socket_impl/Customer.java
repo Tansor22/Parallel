@@ -14,10 +14,10 @@ public class Customer {
     private static Socket cashierSocket;
     private static Socket issuingPointSocket;
 
-    private static Port port = Port.CUSTOMER;
+    private static Host port = Host.CUSTOMER;
 
-    private static Port cashierPort = Port.CASHIER;
-    private static Port issuingPointPort = Port.ISSUING_POINT;
+    private static Host cashierPort = Host.CASHIER;
+    private static Host issuingPointPort = Host.ISSUING_POINT;
 
     public static void main(String[] args) throws IOException {
         Thread.currentThread().setName(port.name());
