@@ -3,44 +3,55 @@ package socket_impl;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.ServerSocket;
 import java.net.Socket;
 
 import static threads_impl.Utils.quoted;
 import static threads_impl.Utils.say;
 
-public class Customer {
-    private static ServerSocket itsSocket;
-    private static Socket cashierSocket;
-    private static Socket issuingPointSocket;
+public class Customer extends Server {
 
-    private static Host port = Host.CUSTOMER;
-
-    private static Host cashierPort = Host.CASHIER;
-    private static Host issuingPointPort = Host.ISSUING_POINT;
+    public Customer(Host port) {
+        super(port);
+    }
 
     public static void main(String[] args) throws IOException {
-        Thread.currentThread().setName(port.name());
-        itsSocket = new ServerSocket(port.port);
-        cashierSocket = Utils.getSocket(cashierPort);
-        //issuingPointSocket = Utils.getSocket(issuingPointPort);
-        ObjectOutputStream cashierOut = Utils.out(cashierSocket);
+        new Customer(Host.CUSTOMER).go();
+    }
 
-        //ObjectOutputStream issuingPortOut = new ObjectOutputStream(issuingPointSocket.getOutputStream());
+    @Override
+    protected void go() throws IOException {
 
         while (true) {
             String randomBook = threads_impl.Utils.getRandomBook();
+            say("Waiting for cashier...");
+            Socket cashierSocket = Utils.getSocket(Host.CASHIER);
+
+            // sending the book
+            ObjectOutputStream cashierOut = Utils.out(cashierSocket);
             Utils.send(cashierOut, randomBook);
             say("I'd like a " + quoted(randomBook) + "book.");
-            // waiting on issuing point and so on
-            issuingPointSocket = itsSocket.accept();
-            ObjectInputStream issuingPointIn = Utils.in(issuingPointSocket);
-            ObjectOutputStream issuingPointOut = Utils.out(issuingPointSocket);
-            String theSameBook = Utils.receive(issuingPointIn);
-            // paying
-            Utils.send(issuingPointOut, Double.toString(Math.random() * 100));
-            // exit
-            say("I've got a " + quoted(theSameBook) + " book now!");
+
+            // waiting for cashier to say ok or no
+            ObjectInputStream cashierIn = Utils.in(cashierSocket);
+            String reply = Utils.receive(cashierIn);
+            if (Metadata.NOT_SOLD.equalsIgnoreCase(reply)) {
+                // waiting for reply condition or no
+                reply = Utils.receive(cashierIn);
+                if (Metadata.CONDITION.equalsIgnoreCase(reply)) {
+                    // everything is ok
+                    say("Waiting for issuing point...");
+                    Socket issuingPointSocket = socket.accept();
+                    ObjectInputStream issuingPointIn = Utils.in(issuingPointSocket);
+                    ObjectOutputStream issuingPointOut = Utils.out(issuingPointSocket);
+
+                    // receive the book
+                    String theSameBook = Utils.receive(issuingPointIn);
+                    // send money
+                    Utils.send(issuingPointOut, Double.toString(Math.random() * 100));
+                    // exit
+                    say("I've got a " + quoted(theSameBook) + " book now!");
+                }
+            }
         }
     }
 }

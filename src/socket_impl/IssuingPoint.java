@@ -9,24 +9,21 @@ import java.net.Socket;
 import static threads_impl.Utils.quoted;
 import static threads_impl.Utils.say;
 
-public class IssuingPoint {
-    private static ServerSocket itsSocket;
-    private static Socket assistantSocket;
-    private static Socket customerSocket;
-    private static Socket cashierSocket;
-
-
-    private static Host port = Host.ISSUING_POINT;
-    private static Host customerPort = Host.CUSTOMER;
-    private static Host cashierPort = Host.CASHIER;
+public class IssuingPoint extends Server {
+    public IssuingPoint(Host port) {
+        super(port);
+    }
 
     public static void main(String[] args) throws IOException {
-        itsSocket = new ServerSocket(port.port);
-        customerSocket = Utils.getSocket(customerPort);
-        cashierSocket = Utils.getSocket(cashierPort);
+      new IssuingPoint(Host.ISSUING_POINT).go();
+    }
 
+    @Override
+    protected void go() throws IOException {
         while (true) {
-            assistantSocket = itsSocket.accept();
+            say("Waiting for assistant...");
+            Socket assistantSocket = socket.accept();
+
             ObjectInputStream assistantIn = Utils.in(assistantSocket);
             String book = Utils.receive(assistantIn);
 
@@ -35,15 +32,20 @@ public class IssuingPoint {
             // packBook
             say("Packing the book...");
 
-            // put to Customer
+            // send to Customer
+            say("Waiting for customer...");
+            Socket customerSocket = Utils.getSocket(Host.CUSTOMER);
             ObjectOutputStream customerOut = Utils.out(customerSocket);
             ObjectInputStream customerIn = Utils.in(customerSocket);
             Utils.send(customerOut, book);
             // getMoney
+            // book map, book -> % of condition, price ???
             double money = Double.parseDouble(Utils.receive(customerIn));
             // mark as sold
             say("We've earned " + money + "$!");
             // put sold Book to Cashier
+            say("Waiting for cashier...");
+            Socket cashierSocket = Utils.getSocket(Host.CASHIER);
             ObjectOutputStream cashierOut = Utils.out(cashierSocket);
 
             Utils.send(cashierOut, "true");

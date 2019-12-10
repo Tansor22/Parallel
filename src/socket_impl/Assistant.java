@@ -9,15 +9,12 @@ import static threads_impl.Utils.quoted;
 import static threads_impl.Utils.say;
 
 public class Assistant extends Server {
-    private Host issuingPoint = Host.ISSUING_POINT;
-    private Host shelf = Host.SHELF;
-
     public Assistant(Host port) {
         super(port);
     }
 
     public static void main(String[] args) throws IOException {
-       new Assistant(Host.ASSISTANT).go();
+        new Assistant(Host.ASSISTANT).go();
     }
 
     @Override
@@ -28,12 +25,13 @@ public class Assistant extends Server {
 
             // request has been received
             ObjectInputStream cashierIn = Utils.in(cashierSocket);
+            ObjectOutputStream cashierOut = Utils.out(cashierSocket);
             String book = Utils.receive(cashierIn);
 
             say("Cashier requested a " + quoted(book) + " book.");
 
             // connect with shelf
-            Socket shelfSocket = Utils.getSocket(shelf);
+            Socket shelfSocket = Utils.getSocket(Host.SHELF);
             // multiplex
             ObjectOutputStream shelfOut = Utils.out(shelfSocket);
             ObjectInputStream shelfIn = Utils.in(shelfSocket);
@@ -41,18 +39,20 @@ public class Assistant extends Server {
             // send book
             Utils.send(shelfOut, book);
             // receive the book
-            String theSameBook = Utils.receive(shelfIn);
+            String reply = Utils.receive(shelfIn);
             say("Checking the book...");
             // if in condition
-            if (!theSameBook.equalsIgnoreCase("#damaged")) {
-                say("The " + quoted(theSameBook) + " in condition!");
+            if (Metadata.CONDITION.equalsIgnoreCase(reply)) {
+                say("The " + quoted(book) + " in condition!");
+                // send to cashier
+                Utils.send(cashierOut, reply);
                 // take to issuing point
-                Socket issuingPointSocket = Utils.getSocket(issuingPoint);
+                Socket issuingPointSocket = Utils.getSocket(Host.ISSUING_POINT);
                 ObjectOutputStream issuingPointOut = Utils.out(issuingPointSocket);
-                Utils.send(issuingPointOut, theSameBook);
+                Utils.send(issuingPointOut, book);
             } else {
-                // as a variant give issuing point #damaged value to send cashier wasSold = false
-                // or cashier must wait forassistant to say oke or no then wasits issuing point
+                // not condition
+                Utils.send(cashierOut, reply);
             }
             // exit
         }

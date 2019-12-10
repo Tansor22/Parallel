@@ -52,6 +52,7 @@ public class Utils {
         Socket output = null;
         while (output == null) {
             try {
+                // it is said this approach is buggy => InetAddress.getLocalHost().isReachable(200);
                 output = new Socket(InetAddress.getLocalHost().getHostName(), port.port);
             } catch (IOException e) {
                 try {

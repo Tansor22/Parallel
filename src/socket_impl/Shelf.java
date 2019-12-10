@@ -3,26 +3,32 @@ package socket_impl;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.ServerSocket;
 import java.net.Socket;
 
-public class Shelf {
-    private static ServerSocket itsSocket;
-    private static Socket assistantSocket;
+import static threads_impl.Utils.say;
 
-    private static Host port = Host.SHELF;
+public class Shelf extends Server {
+    public Shelf(Host port) {
+        super(port);
+    }
 
     public static void main(String[] args) throws IOException {
-        itsSocket = new ServerSocket(port.port);
+        new Shelf(Host.SHELF).go();
+    }
+
+    @Override
+    protected void go() throws IOException {
         while (true) {
-            assistantSocket = itsSocket.accept();
+            say("Waiting for assistant...");
+            Socket assistantSocket = socket.accept();
 
             ObjectOutputStream assistantOut = Utils.out(assistantSocket);
             ObjectInputStream assistantIn = Utils.in(assistantSocket);
             String book = Utils.receive(assistantIn);
             // condition or no
+            // Books map, book -> % of condition
 
-            Utils.send(assistantOut, book);
+            Utils.send(assistantOut, threads_impl.Utils.coin(Metadata.CONDITION, Metadata.NOT_CONDITION));
         }
     }
 }
