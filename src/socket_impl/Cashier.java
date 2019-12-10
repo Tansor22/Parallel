@@ -33,6 +33,7 @@ public class Cashier extends Server {
                 Utils.send(customerOut, Metadata.SOLD);
             } else {
                 // not sold
+                // TODO: #not_sold message wasn't sent so customer skipped not-sold block and required a new book
                 say("Waiting for assistant...");
                 // send the book
                 Socket assistantSocket = Utils.getSocket(Host.ASSISTANT);
@@ -45,6 +46,7 @@ public class Cashier extends Server {
                 String condition = Utils.receive(assistantIn);
 
                 if (Metadata.CONDITION.equalsIgnoreCase(condition)) {
+                    // absent
                     Utils.send(customerOut, Metadata.CONDITION);
                     say(quoted(desiredBook) + " is in condition! Transfer it to issuing point..");
                     say("Waiting for issuing point...");

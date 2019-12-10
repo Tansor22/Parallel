@@ -32,6 +32,7 @@ public class Customer extends Server {
             say("I'd like a " + quoted(randomBook) + "book.");
 
             // waiting for cashier to say ok or no
+            say("Is " + quoted(randomBook) + " ok?");
             ObjectInputStream cashierIn = Utils.in(cashierSocket);
             String reply = Utils.receive(cashierIn);
             if (Metadata.NOT_SOLD.equalsIgnoreCase(reply)) {

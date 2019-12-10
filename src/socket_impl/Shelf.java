@@ -28,7 +28,7 @@ public class Shelf extends Server {
             // condition or no
             // Books map, book -> % of condition
 
-            Utils.send(assistantOut, threads_impl.Utils.coin(Metadata.CONDITION, Metadata.NOT_CONDITION));
+            Utils.send(assistantOut, threads_impl.Utils.coin(Metadata.CONDITION/*, Metadata.NOT_CONDITION*/));
         }
     }
 }
