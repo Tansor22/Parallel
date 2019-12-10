@@ -40,11 +40,15 @@ public class Cashier extends Server {
                 Utils.send(assistantOut, desiredBook);
 
                 // waits for assistants reply
+                say("Waiting for assistant's reply whether " + quoted(desiredBook) + " in condition or no...");
                 ObjectInputStream assistantIn = Utils.in(assistantSocket);
                 String condition = Utils.receive(assistantIn);
 
                 if (Metadata.CONDITION.equalsIgnoreCase(condition)) {
+                    Utils.send(customerOut, Metadata.CONDITION);
+                    say(quoted(desiredBook) + " is in condition! Transfer it to issuing point..");
                     say("Waiting for issuing point...");
+
                     Socket issuingPointSocket = Utils.getSocket(Host.ISSUING_POINT);
                     ObjectInputStream issuingPoint = Utils.in(issuingPointSocket);
                     // wait for issuing point

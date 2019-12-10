@@ -20,7 +20,7 @@ public class Assistant extends Server {
     @Override
     protected void go() throws IOException {
         while (true) {
-            say("Wasting for cashier...");
+            say("Waiting for cashier...");
             Socket cashierSocket = socket.accept();
 
             // request has been received

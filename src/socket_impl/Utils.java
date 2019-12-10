@@ -6,6 +6,8 @@ import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 
+import static threads_impl.Utils.say;
+
 public class Utils {
     public static String receive(ObjectInputStream in) {
         String output = null;
@@ -44,9 +46,6 @@ public class Utils {
         return null;
     }
 
-    public static boolean isQuit(String data) {
-        return data.equalsIgnoreCase("exit");
-    }
 
     public static Socket getSocket(Host port) {
         Socket output = null;
@@ -60,7 +59,7 @@ public class Utils {
                 } catch (InterruptedException e1) {
                     e1.printStackTrace();
                 }
-                System.out.println(Thread.currentThread().getName() + " waits for " + port.name());
+               say("Waiting for " + port.name() + "...");
                 //e.printStackTrace();
             }
         }
