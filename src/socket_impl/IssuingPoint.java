@@ -47,8 +47,9 @@ public class IssuingPoint extends Server {
             say("Waiting for cashier...");
             Socket cashierSocket = Utils.getSocket(Host.CASHIER);
             ObjectOutputStream cashierOut = Utils.out(cashierSocket);
-
-            Utils.send(cashierOut, "true");
+            say(quoted(book) + " was sold!");
+            //TODO seems the message isn't sent
+            Utils.send(cashierOut, Metadata.SOLD);
         }
     }
 }

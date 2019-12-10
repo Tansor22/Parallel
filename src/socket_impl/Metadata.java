@@ -6,5 +6,4 @@ public interface Metadata {
     String CONDITION = "#condition";
     String NOT_CONDITION = "#not_condition";
 
-
 }
