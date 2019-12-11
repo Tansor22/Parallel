@@ -1,6 +1,5 @@
 package socket_impl;
 
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -13,15 +12,15 @@ public class Assistant extends Server {
         super(port);
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         new Assistant(Host.ASSISTANT).go();
     }
 
     @Override
-    protected void go() throws IOException {
+    protected void go() {
         while (true) {
             say("Waiting for cashier...");
-            Socket cashierSocket = socket.accept();
+            Socket cashierSocket = accept();
 
             // request has been received
             ObjectInputStream cashierIn = Utils.in(cashierSocket);

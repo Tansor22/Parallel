@@ -1,6 +1,5 @@
 package socket_impl;
 
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -12,15 +11,15 @@ public class Shelf extends Server {
         super(port);
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         new Shelf(Host.SHELF).go();
     }
 
     @Override
-    protected void go() throws IOException {
+    protected void go() {
         while (true) {
             say("Waiting for assistant...");
-            Socket assistantSocket = socket.accept();
+            Socket assistantSocket = accept();
 
             ObjectOutputStream assistantOut = Utils.out(assistantSocket);
             ObjectInputStream assistantIn = Utils.in(assistantSocket);

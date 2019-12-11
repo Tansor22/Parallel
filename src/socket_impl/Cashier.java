@@ -1,6 +1,5 @@
 package socket_impl;
 
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -13,15 +12,15 @@ public class Cashier extends Server {
         super(port);
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         new Cashier(Host.CASHIER).go();
     }
 
     @Override
-    protected void go() throws IOException {
+    protected void go() {
         while (true) {
             say("Waiting for customer...");
-            Socket customerSocket = socket.accept();
+            Socket customerSocket = accept();
 
             // request has been received
             ObjectInputStream customerIn = Utils.in(customerSocket);
@@ -49,12 +48,11 @@ public class Cashier extends Server {
                     Utils.send(customerOut, Metadata.CONDITION);
                     say(quoted(desiredBook) + " is in condition! Transfer it to issuing point..");
 
-                    Socket issuingPointSocket = socket.accept();
+                    Socket issuingPointSocket = accept();
                     ObjectInputStream issuingPointIn = Utils.in(issuingPointSocket);
 
                     say("Waiting for issuing point...");
                     String reply = Utils.receive(issuingPointIn);
-                    System.out.println(reply);
                     if (Metadata.SOLD.equalsIgnoreCase(reply)) {
                         say("The " + quoted(desiredBook) + " has been sold!");
                     }

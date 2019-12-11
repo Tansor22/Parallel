@@ -1,6 +1,5 @@
 package socket_impl;
 
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -13,15 +12,15 @@ public class IssuingPoint extends Server {
         super(port);
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
       new IssuingPoint(Host.ISSUING_POINT).go();
     }
 
     @Override
-    protected void go() throws IOException {
+    protected void go() {
         while (true) {
             say("Waiting for assistant...");
-            Socket assistantSocket = socket.accept();
+            Socket assistantSocket = accept();
 
             ObjectInputStream assistantIn = Utils.in(assistantSocket);
             String book = Utils.receive(assistantIn);

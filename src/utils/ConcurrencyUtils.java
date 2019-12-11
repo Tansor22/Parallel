@@ -6,6 +6,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class ConcurrencyUtils {
+    private static final BooleanSupplier TRUE = () -> true;
     public static void waitForMultipleThreads(Thread... threads) {
         for (Thread thread : threads) {
             try {
@@ -31,10 +32,15 @@ public class ConcurrencyUtils {
     }
 
     public static Thread createInfiniteThread(Runnable r, String threadName) {
-        return createInfiniteThread(r, threadName, .5, () -> true);
+        return createInfiniteThread(r, threadName, .5, TRUE);
     }
+
     public static Thread createInfiniteThread(Runnable r, String threadName, BooleanSupplier sup) {
         return createInfiniteThread(r, threadName, .5, sup);
+    }
+
+    public static Thread createInfiniteThread(Runnable r, String threadName, double period) {
+        return createInfiniteThread(r, threadName, period, TRUE);
     }
 
     public static Thread createInfiniteThread(Runnable r, String threadName, double period, BooleanSupplier sup) {
