@@ -3,7 +3,6 @@ package socket_impl;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.ServerSocket;
 import java.net.Socket;
 
 import static threads_impl.Utils.quoted;
@@ -32,6 +31,14 @@ public class IssuingPoint extends Server {
             // packBook
             say("Packing the book...");
 
+            // put sold Book to Cashier
+            say("Waiting for cashier...");
+            Socket cashierSocket = Utils.getSocket(Host.CASHIER);
+            ObjectOutputStream cashierOut = Utils.out(cashierSocket);
+            say(quoted(book) + " was sold!");
+            // First of all complete all operations cashier issuing point the paying
+            Utils.send(cashierOut, Metadata.SOLD);
+
             // send to Customer
             say("Waiting for customer...");
             Socket customerSocket = Utils.getSocket(Host.CUSTOMER);
@@ -43,13 +50,6 @@ public class IssuingPoint extends Server {
             double money = Double.parseDouble(Utils.receive(customerIn));
             // mark as sold
             say("We've earned " + money + "$!");
-            // put sold Book to Cashier
-            say("Waiting for cashier...");
-            Socket cashierSocket = Utils.getSocket(Host.CASHIER);
-            ObjectOutputStream cashierOut = Utils.out(cashierSocket);
-            say(quoted(book) + " was sold!");
-            //TODO seems the message isn't sent
-            Utils.send(cashierOut, Metadata.SOLD);
         }
     }
 }

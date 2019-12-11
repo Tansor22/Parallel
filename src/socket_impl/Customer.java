@@ -15,7 +15,8 @@ public class Customer extends Server {
     }
 
     public static void main(String[] args) throws IOException {
-        new Customer(Host.CUSTOMER).go();
+        Customer host = new Customer(Host.CUSTOMER);
+        //ConcurrencyUtils.createInfiniteThread(host::go, )
     }
 
     @Override

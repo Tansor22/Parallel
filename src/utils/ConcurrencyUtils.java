@@ -1,6 +1,7 @@
 package utils;
 
 import java.util.*;
+import java.util.function.BooleanSupplier;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -30,13 +31,16 @@ public class ConcurrencyUtils {
     }
 
     public static Thread createInfiniteThread(Runnable r, String threadName) {
-        return createInfiniteThread(r, threadName, 500);
+        return createInfiniteThread(r, threadName, .5, () -> true);
+    }
+    public static Thread createInfiniteThread(Runnable r, String threadName, BooleanSupplier sup) {
+        return createInfiniteThread(r, threadName, .5, sup);
     }
 
-    public static Thread createInfiniteThread(Runnable r, String threadName, double period) {
+    public static Thread createInfiniteThread(Runnable r, String threadName, double period, BooleanSupplier sup) {
         Function<Double, Long> secondsConverter = doubleSeconds -> (long) (doubleSeconds * 1000);
         Thread thread = new Thread(() -> {
-            while (true) {
+            while (sup.getAsBoolean()) {
                 r.run();
                 try {
                     Thread.sleep(secondsConverter.apply(period));

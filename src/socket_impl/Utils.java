@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
+import java.net.ServerSocket;
 import java.net.Socket;
 
 import static threads_impl.Utils.say;
@@ -20,6 +21,15 @@ public class Utils {
         }
     }
 
+    public Socket accept(ServerSocket ss) {
+        Socket output = null;
+        try {
+            output = ss.accept();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return output;
+    }
     public static void send(ObjectOutputStream out, String data) {
         try {
             out.writeObject(data);
@@ -55,7 +65,7 @@ public class Utils {
                 output = new Socket(InetAddress.getLocalHost().getHostName(), port.port);
             } catch (IOException e) {
                 try {
-                    Thread.sleep(500);
+                    Thread.sleep(100);
                 } catch (InterruptedException e1) {
                     e1.printStackTrace();
                 }
